@@ -9,7 +9,7 @@ import pickle
 import matplotlib.pyplot as plt
 
 # Step 1: Load the dataset
-file_path = r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\Bangalore Housing\Bengaluru_House_Data.csv"
+file_path = r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\bengaluru-housing-ci-cd\Bengaluru_House_Data.csv"
 data = pd.read_csv(file_path)
 
 # Step 2: Data Cleaning
@@ -57,7 +57,7 @@ y = data['price']  # Raw price, no log transformation
 
 # Save feature names
 feature_names = X.columns
-with open(r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\Bangalore Housing\feature_names.pkl", 'wb') as f:
+with open(r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\bengaluru-housing-ci-cd\feature_names.pkl", 'wb') as f:
     pickle.dump(feature_names, f)
 
 # Step 6: Train-Test Split
@@ -69,7 +69,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # Save the scaler
-with open(r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\Bangalore Housing\scaler.pkl", 'wb') as scaler_file:
+with open(r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\bengaluru-housing-ci-cd\scaler.pkl", 'wb') as scaler_file:
     pickle.dump(scaler, scaler_file)
 
 # Step 8: Hyperparameter Tuning with RandomizedSearchCV
@@ -127,7 +127,7 @@ plt.xlabel("Relative Importance")
 plt.show()
 
 # Step 11: Save the Model
-with open(r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\Bangalore Housing\best_xgb_model.pkl", 'wb') as model_file:
+with open(r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\bengaluru-housing-ci-cd\best_xgb_model.pkl", 'wb') as model_file:
     pickle.dump(best_model, model_file)
 
 print("Model, scaler, and feature names saved successfully!")
