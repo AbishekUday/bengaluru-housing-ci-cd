@@ -26,6 +26,26 @@ def load_data(file_path):
         print(f"File not found at path: {file_path}")
         return None
 
+def convert_sqft_to_num(x):
+    """
+    Convert the 'total_sqft' column to numeric.
+    Args:
+        x (str): Value in the 'total_sqft' column.
+    Returns:
+        float: Converted numeric value.
+    """
+    try:
+        if '-' in str(x):
+            parts = str(x).split('-')
+            return (float(parts[0]) + float(parts[1])) / 2
+        try:
+            return float(x)
+        except ValueError:
+            return None
+    except Exception as e:
+        print(f"Error converting sqft value: {x}, Error: {e}")
+        return None
+
 def preprocess_data(data):
     """
     Preprocess the data: fill missing values, drop unused columns, and clean text data.
@@ -45,10 +65,14 @@ def preprocess_data(data):
     data['balcony'] = data['balcony'].fillna(data['balcony'].mean())
 
     # Drop unnecessary columns
-    data = data.drop(['availability'], axis=1)
+    if 'availability' in data.columns:
+        data = data.drop(['availability'], axis=1)
 
-    # Additional preprocessing (example)
-    data['size'] = data['size'].str.extract('(\d+)').fillna(0).astype(int)
+    # Extract numeric value from the 'size' column
+    data['size'] = data['size'].str.extract(r'(\d+)').fillna(0).astype(int)
+
+    # Convert 'total_sqft' to numeric using the helper function
+    data['total_sqft'] = data['total_sqft'].apply(convert_sqft_to_num)
 
     return data
 
@@ -57,25 +81,12 @@ if __name__ == "__main__":
     file_path = "C:/Users/Indra/Desktop/Praxis/Term 2/MLOPS/bengaluru-housing-ci-cd/tests/Bengaluru_House_Data.csv"
     
     # Load and preprocess data
-    data = load_data(file_path)
-    processed_data = preprocess_data(data)
+    raw_data = load_data(file_path)
+    processed_data = preprocess_data(raw_data)
     
     if processed_data is not None:
         print("Data preprocessing complete.")
 
-
-# Convert 'total_sqft' to numeric
-def convert_sqft_to_num(sqft):
-    try:
-        if '-' in sqft:
-            sqft_range = sqft.split('-')
-            return (float(sqft_range[0]) + float(sqft_range[1])) / 2
-        return float(sqft)
-    except:
-        return None
-
-data['total_sqft'] = data['total_sqft'].apply(convert_sqft_to_num)
-data = data.dropna(subset=['total_sqft'])
 
 # Step 3: Handle Outliers
 upper_limit_sqft = data['total_sqft'].quantile(0.99)
