@@ -74,6 +74,11 @@ def preprocess_data(data):
     # Convert 'total_sqft' to numeric using the helper function
     data['total_sqft'] = data['total_sqft'].apply(convert_sqft_to_num)
 
+    # Remove outliers
+    if 'total_sqft' in data.columns:
+        upper_limit_sqft = data['total_sqft'].quantile(0.99)
+        data = data[data['total_sqft'] <= upper_limit_sqft]
+
     return data
 
 if __name__ == "__main__":
@@ -82,14 +87,15 @@ if __name__ == "__main__":
     
     # Load and preprocess data
     raw_data = load_data(file_path)
-    processed_data = preprocess_data(raw_data)
-    
-    if processed_data is not None:
-        print("Data preprocessing complete.")
+    if raw_data is not None:
+        processed_data = preprocess_data(raw_data)
+        if processed_data is not None:
+            print("Data preprocessing complete.")
+        else:
+            print("Error in preprocessing data.")
+    else:
+        print("Error in loading data.")
 
-
-# Step 3: Handle Outliers
-upper_limit_sqft = data['total_sqft'].quantile(0.99)
 upper_limit_bath = data['bath'].quantile(0.99)
 upper_limit_price = data['price'].quantile(0.99)
 
