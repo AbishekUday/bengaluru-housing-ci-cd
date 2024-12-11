@@ -1,0 +1,26 @@
+dropdown_options:
+  area_type:
+  - Built-up  Area
+  - Super built-up  Area
+  - Plot  Area
+  - Carpet  Area
+  size:
+  - 1 BHK
+  - 2 BHK
+  - 3 BHK
+  - 4 BHK
+  - 4+ BHK
+features:
+  categorical_features:
+  - location
+  - area_type
+  - society
+  - size
+  numeric_features:
+  - total_sqft
+  - bath
+  - balcony
+paths:
+  model: best_rf_model.pkl
+  scaler: scaler.pkl
+  feature_names: feature_names.pkl
