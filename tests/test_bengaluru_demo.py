@@ -20,18 +20,16 @@ def test_preprocess_data():
     """
     file_path = os.path.join(os.path.dirname(__file__), "Bengaluru_House_Data.csv")
     assert os.path.exists(file_path), f"Test file not found at path: {file_path}"
+    
+    # Load and preprocess data
     data = load_data(file_path)
-    assert data is not None, "Failed to load data for preprocessing."
-
-    # Preprocess the data
     processed_data = preprocess_data(data)
 
     # Assertions
-    assert processed_data is not None, "Preprocessed data is None."
+    assert processed_data.isnull().sum().sum() == 0, "Preprocessed data contains null values."
     assert not processed_data.empty, "Preprocessed data is empty."
     assert "price_per_sqft" in processed_data.columns, "Feature engineering missing 'price_per_sqft'."
     assert processed_data["total_sqft"].dtype != object, "'total_sqft' contains non-numeric values."
-    assert processed_data.isnull().sum().sum() == 0, "Preprocessed data contains null values."
 
 
 def test_preprocess_data():

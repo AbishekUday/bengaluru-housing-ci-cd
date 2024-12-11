@@ -47,27 +47,23 @@ import numpy as np
 
 def preprocess_data(data):
     """
-    Preprocess the dataset: handle missing values, feature engineering, etc.
+    Preprocesses the data by handling missing values, creating new features, and cleaning columns.
     """
-    if data is None:
-        raise ValueError("No data provided for preprocessing.")
+    # Handle missing values
+    data["location"].fillna("Unknown", inplace=True)  # Replace null locations with 'Unknown'
+    data["size"].fillna("Unknown", inplace=True)      # Replace null sizes with 'Unknown'
+    data["society"].fillna("Unknown", inplace=True)   # Replace null societies with 'Unknown'
+    data["bath"].fillna(data["bath"].median(), inplace=True)  # Fill missing 'bath' with median
+    data["balcony"].fillna(0, inplace=True)           # Replace null balconies with 0
 
-    # Drop rows with missing critical values
-    critical_columns = ["total_sqft", "price"]
-    data.dropna(subset=critical_columns, inplace=True)
-
-    # Clean 'total_sqft' column
+    # Feature Engineering: Example for price per square foot
     data["total_sqft"] = pd.to_numeric(data["total_sqft"], errors="coerce")
-    data.dropna(subset=["total_sqft"], inplace=True)  # Drop rows with invalid 'total_sqft'
-
-    # Handle other missing values
-    data["bath"].fillna(data["bath"].median(), inplace=True)
-    data["balcony"].fillna(0, inplace=True)
-
-    # Feature engineering: calculate 'price_per_sqft'
     data["price_per_sqft"] = data["price"] / data["total_sqft"]
 
+    # Drop any rows still containing nulls (if any remain)
+    data.dropna(inplace=True)
     return data
+
 
 
     # Fill missing values
