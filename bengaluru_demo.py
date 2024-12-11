@@ -14,12 +14,12 @@ import pandas as pd
 def load_data(file_name="tests/Bengaluru_House_Data.csv"):
     """
     Load the dataset from the specified file path.
-    
+
     Args:
         file_name (str): Relative path to the file.
-        
+
     Returns:
-        pd.DataFrame: Loaded dataset.
+        pd.DataFrame: Loaded and cleaned dataset.
     """
     try:
         data = pd.read_csv(file_name)
@@ -28,9 +28,20 @@ def load_data(file_name="tests/Bengaluru_House_Data.csv"):
         print(f"Error: {e}")
         raise
 
+def preprocess_data(data):
+    """
+    Preprocess the dataset by dropping unnecessary columns.
 
-# Step 2: Data Cleaning
-data = data.drop(['availability'], axis=1)
+    Args:
+        data (pd.DataFrame): Input dataset.
+
+    Returns:
+        pd.DataFrame: Preprocessed dataset.
+    """
+    if 'availability' in data.columns:
+        data = data.drop(['availability'], axis=1)
+    return data
+
 
 # Handle missing values
 data['location'] = data['location'].fillna('Unknown')
