@@ -14,7 +14,7 @@ def test_load_data():
     assert not data.empty, "Loaded data is empty."
     assert "location" in data.columns, "Expected column 'location' not found in the data."
 
-ddef test_preprocess_data():
+def test_preprocess_data():
     """
     Test the preprocess_data function to ensure it preprocesses data correctly.
     """
