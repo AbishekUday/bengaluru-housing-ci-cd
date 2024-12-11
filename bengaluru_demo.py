@@ -42,6 +42,9 @@ def convert_sqft_to_num(x):
     except (ValueError, TypeError):
         return None
 
+import pandas as pd
+import numpy as np
+
 def preprocess_data(data):
     """
     Preprocess the dataset: handle missing values, feature engineering, etc.
@@ -53,9 +56,16 @@ def preprocess_data(data):
     critical_columns = ["total_sqft", "price"]
     data.dropna(subset=critical_columns, inplace=True)
 
-    # Feature engineering
+    # Clean 'total_sqft' column
+    data["total_sqft"] = pd.to_numeric(data["total_sqft"], errors="coerce")
+    data.dropna(subset=["total_sqft"], inplace=True)  # Drop rows with invalid 'total_sqft'
+
+    # Handle other missing values
+    data["bath"].fillna(data["bath"].median(), inplace=True)
+    data["balcony"].fillna(0, inplace=True)
+
+    # Feature engineering: calculate 'price_per_sqft'
     data["price_per_sqft"] = data["price"] / data["total_sqft"]
-    data.dropna(subset=["price_per_sqft"], inplace=True)
 
     return data
 
