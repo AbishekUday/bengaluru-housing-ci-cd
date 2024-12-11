@@ -9,8 +9,25 @@ import pickle
 import matplotlib.pyplot as plt
 
 # Step 1: Load the dataset
-file_path = r"C:\Users\Indra\Desktop\Praxis\Term 2\MLOPS\bengaluru-housing-ci-cd\Bengaluru_House_Data.csv"
-data = pd.read_csv(file_path)
+import pandas as pd
+
+def load_data(file_name="tests/Bengaluru_House_Data.csv"):
+    """
+    Load the dataset from the specified file path.
+    
+    Args:
+        file_name (str): Relative path to the file.
+        
+    Returns:
+        pd.DataFrame: Loaded dataset.
+    """
+    try:
+        data = pd.read_csv(file_name)
+        return data
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        raise
+
 
 # Step 2: Data Cleaning
 data = data.drop(['availability'], axis=1)
