@@ -44,10 +44,21 @@ def convert_sqft_to_num(x):
 
 def preprocess_data(data):
     """
-    Preprocess the dataset: fill missing values, drop unused columns, and clean data.
+    Preprocess the dataset: handle missing values, feature engineering, etc.
     """
     if data is None:
         raise ValueError("No data provided for preprocessing.")
+
+    # Drop rows with missing critical values
+    critical_columns = ["total_sqft", "price"]
+    data.dropna(subset=critical_columns, inplace=True)
+
+    # Feature engineering
+    data["price_per_sqft"] = data["price"] / data["total_sqft"]
+    data.dropna(subset=["price_per_sqft"], inplace=True)
+
+    return data
+
 
     # Fill missing values
     data['location'] = data['location'].fillna('Unknown')
