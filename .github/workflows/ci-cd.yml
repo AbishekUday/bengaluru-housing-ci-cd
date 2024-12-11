@@ -1,0 +1,36 @@
+name: Azure CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout Code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Azure Login
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+    # Build the application (Modify this section based on your project)
+    - name: Build Application
+      run: |
+        pip install -r requirements.txt
+        pytest
+
+    # Deploy to Azure Web App (if using App Service)
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: <your-app-service-name>
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
