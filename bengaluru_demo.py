@@ -11,44 +11,58 @@ import matplotlib.pyplot as plt
 # Step 1: Load the dataset
 import pandas as pd
 
-def load_data(file_name="tests/Bengaluru_House_Data.csv"):
+def load_data(file_path):
     """
-    Load the dataset from the specified file path.
-
+    Load the dataset from a specified file path.
     Args:
-        file_name (str): Relative path to the file.
-
+        file_path (str): Path to the CSV file.
     Returns:
-        pd.DataFrame: Loaded and cleaned dataset.
+        pd.DataFrame: Loaded data as a pandas DataFrame.
     """
     try:
-        data = pd.read_csv(file_name)
+        data = pd.read_csv(file_path)
         return data
-    except FileNotFoundError as e:
-        print(f"Error: {e}")
-        raise
+    except FileNotFoundError:
+        print(f"File not found at path: {file_path}")
+        return None
 
 def preprocess_data(data):
     """
-    Preprocess the dataset by dropping unnecessary columns.
-
+    Preprocess the data: fill missing values, drop unused columns, and clean text data.
     Args:
-        data (pd.DataFrame): Input dataset.
-
+        data (pd.DataFrame): Input raw data.
     Returns:
-        pd.DataFrame: Preprocessed dataset.
+        pd.DataFrame: Preprocessed data.
     """
-    if 'availability' in data.columns:
-        data = data.drop(['availability'], axis=1)
+    if data is None:
+        print("No data to preprocess.")
+        return None
+
+    # Fill missing values
+    data['location'] = data['location'].fillna('Unknown')
+    data['size'] = data['size'].fillna('Missing')
+    data['bath'] = data['bath'].fillna(data['bath'].mean())
+    data['balcony'] = data['balcony'].fillna(data['balcony'].mean())
+
+    # Drop unnecessary columns
+    data = data.drop(['availability'], axis=1)
+
+    # Additional preprocessing (example)
+    data['size'] = data['size'].str.extract('(\d+)').fillna(0).astype(int)
+
     return data
 
+if __name__ == "__main__":
+    # Update the file path below to the correct path on your system
+    file_path = "C:/Users/Indra/Desktop/Praxis/Term 2/MLOPS/bengaluru-housing-ci-cd/tests/Bengaluru_House_Data.csv"
+    
+    # Load and preprocess data
+    data = load_data(file_path)
+    processed_data = preprocess_data(data)
+    
+    if processed_data is not None:
+        print("Data preprocessing complete.")
 
-# Handle missing values
-data['location'] = data['location'].fillna('Unknown')
-data['size'] = data['size'].fillna(data['size'].mode()[0])
-data['society'] = data['society'].fillna('Unknown')
-data['bath'] = data['bath'].fillna(data['bath'].median())
-data['balcony'] = data['balcony'].fillna(data['balcony'].median())
 
 # Convert 'total_sqft' to numeric
 def convert_sqft_to_num(sqft):

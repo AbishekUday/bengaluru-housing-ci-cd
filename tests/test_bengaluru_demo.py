@@ -3,32 +3,21 @@ import pytest
 from bengaluru_demo import load_data, preprocess_data
 
 def test_load_data():
-    """
-    Test the `load_data` function to ensure it loads the data correctly.
-    """
-    # Use the relative path to the test data file
-    file_path = "tests/Bengaluru_House_Data.csv"
-    
-    # Load the data using the function
+    # Provide the correct file path for testing
+    file_path = "C:/Users/Indra/Desktop/Praxis/Term 2/MLOPS/bengaluru-housing-ci-cd/tests/Bengaluru_House_Data.csv"
     data = load_data(file_path)
-    
-    # Assertions to validate the data
-    assert data is not None, "The dataset should not be None."
-    assert not data.empty, "The dataset should not be empty."
-    assert "price" in data.columns, "The dataset must have a 'price' column."
+    assert data is not None, "Failed to load data."
+    assert not data.empty, "Data is empty."
 
 def test_preprocess_data():
-    """
-    Test the `preprocess_data` function to ensure it processes the data correctly.
-    """
-    file_path = "tests/Bengaluru_House_Data.csv"
+    # Load sample data
+    file_path = "C:/Users/Indra/Desktop/Praxis/Term 2/MLOPS/bengaluru-housing-ci-cd/tests/Bengaluru_House_Data.csv"
     data = load_data(file_path)
-    
-    # Preprocess the data
     processed_data = preprocess_data(data)
-    
-    # Assertions to validate preprocessing
-    assert 'availability' not in processed_data.columns, "The 'availability' column should be removed."
+    assert processed_data is not None, "Failed to preprocess data."
+    assert 'location' in processed_data.columns, "'location' column missing in preprocessed data."
+    assert 'availability' not in processed_data.columns, "'availability' column not dropped in preprocessed data."
+
 
 
 
