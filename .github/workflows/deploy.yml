@@ -3,7 +3,7 @@ name: Deploy to Azure App Service
 on:
   push:
     branches:
-      - main  # Change to your default branch if not `main`
+      - main  # Trigger on pushes to the main branch
 
 jobs:
   build-and-deploy:
@@ -14,21 +14,29 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    # Step 2: Log in to Azure
+    - name: Log in to Azure
+      uses: azure/login@v1
       with:
-        python-version: '3.9'  # Match the Python version your app requires
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  # Service Principal credentials
 
-    - name: Install dependencies
+    # Step 3: Build Docker image (Optional if Dockerfile is already in your repository)
+    - name: Build Docker image
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        docker build -t abishekudhay.azurecr.io/bangalore-house-price-prediction:latest .
 
-    # Step 3: Deploy to Azure App Service Slot
-    - name: Deploy to Azure WebApp Slot
-      uses: azure/webapps-deploy@v2
+    # Step 4: Push Docker image to ACR
+    - name: Push Docker image to ACR
+      run: |
+        docker login abishekudhay.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+        docker push abishekudhay.azurecr.io/bangalore-house-price-prediction:latest
+
+    # Step 5: Deploy Docker container to Azure Web App Slot (Staging)
+    - name: Deploy Docker container to Azure Web App Staging Slot
+      uses: azure/webapps-container-deploy@v2
       with:
-        app-name: 'Bangalore-house-Price-Prediction'  # Replace with your App Service name
-        slot-name: 'staging'                # Update to your specific slot name
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        app-name: 'bangalore-house-price-prediction-p'  # Name of the App Service (without the slot part)
+        slot-name: 'staging'  # Slot name for staging
+        image: 'abishekudhay.azurecr.io/bangalore-house-price-prediction:latest'  # Docker image to deploy
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Publish profile for the Azure Web App
+
