@@ -22,15 +22,16 @@ jobs:
         client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-    # Build the application (Modify this section based on your project)
+    # Build the application
     - name: Build Application
       run: |
         pip install -r requirements.txt
         pytest
 
-    # Deploy to Azure Web App (if using App Service)
+    # Deploy to Azure Web App
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: <your-app-service-name>
+        app-name: <your-app-service-name> # Replace with the new app name if changed
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+
