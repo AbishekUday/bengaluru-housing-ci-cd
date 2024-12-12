@@ -1,0 +1,46 @@
+[
+  {
+    "SQLServerDBConnectionString": "REDACTED",
+    "controlPanelLink": "https://portal.azure.com",
+    "databases": null,
+    "destinationAppUrl": "https://bangalore-house-price-prediction-bwhuc7bxe2atecca.eastus2-01.azurewebsites.net",
+    "hostingProviderForumLink": "",
+    "msdeploySite": "Bangalore-House-Price-Prediction",
+    "mySQLDBConnectionString": "",
+    "profileName": "Bangalore-House-Price-Prediction - Web Deploy",
+    "publishMethod": "MSDeploy",
+    "publishUrl": "bangalore-house-price-prediction-bwhuc7bxe2atecca.scm.eastus2-01.azurewebsites.net:443",
+    "userName": "REDACTED",
+    "userPWD": "REDACTED",
+    "webSystem": "WebSites"
+  },
+  {
+    "SQLServerDBConnectionString": "REDACTED",
+    "controlPanelLink": "https://portal.azure.com",
+    "databases": null,
+    "destinationAppUrl": "https://bangalore-house-price-prediction-bwhuc7bxe2atecca.eastus2-01.azurewebsites.net",
+    "ftpPassiveMode": "True",
+    "hostingProviderForumLink": "",
+    "mySQLDBConnectionString": "",
+    "profileName": "Bangalore-House-Price-Prediction - FTP",
+    "publishMethod": "FTP",
+    "publishUrl": "ftps://waws-prod-bn1-263.ftp.azurewebsites.windows.net/site/wwwroot",
+    "userName": "REDACTED",
+    "userPWD": "REDACTED",
+    "webSystem": "WebSites"
+  },
+  {
+    "SQLServerDBConnectionString": "REDACTED",
+    "controlPanelLink": "https://portal.azure.com",
+    "databases": null,
+    "destinationAppUrl": "https://bangalore-house-price-prediction-bwhuc7bxe2atecca.eastus2-01.azurewebsites.net",
+    "hostingProviderForumLink": "",
+    "mySQLDBConnectionString": "",
+    "profileName": "Bangalore-House-Price-Prediction - Zip Deploy",
+    "publishMethod": "ZipDeploy",
+    "publishUrl": "bangalore-house-price-prediction-bwhuc7bxe2atecca.scm.eastus2-01.azurewebsites.net:443",
+    "userName": "REDACTED",
+    "userPWD": "REDACTED",
+    "webSystem": "WebSites"
+  }
+]

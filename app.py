@@ -16,7 +16,7 @@ app = FastAPI()
 # Load the pipeline
 with open("best_xgb_model.pkl", "rb") as f:
     model = pickle.load(f)
-
+# post
 @app.post("/predict")
 def predict(total_sqft: float, bath: int, balcony: int, location: str, area_type: str, size: str):
     input_data = pd.DataFrame([{
