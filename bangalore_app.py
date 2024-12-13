@@ -91,7 +91,7 @@ def main():
             prediction = model.predict(scaled_input)[0]
 
             # Display the predicted house price
-            st.success(f'Predicted House Price: ₹{prediction:,.2f}')
+            st.success(f'Predicted House Price: ₹{prediction:,.2f} Lakhs')
         else:
             st.error("Model, scaler, or feature names not loaded. Please check the required files.")
 
