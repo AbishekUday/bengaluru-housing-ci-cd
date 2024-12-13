@@ -29,9 +29,5 @@ def predict(total_sqft: float, bath: int, balcony: int, location: str, area_type
     }])
 
     prediction = model.predict(input_data)[0]
-<<<<<<< HEAD
-    return {"predicted_price_is": prediction}
-### test_1
-=======
-    return {"predicted_price": prediction}
->>>>>>> e95f9513855788517b6248319dbbc561bb5ad6a1
+return {"predicted_price": prediction}  # Example if this is the correct line
+
