@@ -1,4 +1,4 @@
-name: Azure CI/CD Pipeline
+name: Deploy to Azure Web App
 
 on:
   push:
@@ -9,29 +9,44 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      AZURE_WEBAPP_NAME: ${{ secrets.WEBAPP_NAME }}
+      AZURE_PLAN: ${{ secrets.AZURE_PLAN }}
+      AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      ACR_NAME: ${{ secrets.ACR_NAME }}
+
     steps:
-    # Checkout Code
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    # Azure Login
-    - name: Login to Azure
+    - name: Log in to Azure using Service Principal
       uses: azure/login@v1
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # Build the application
-    - name: Build Application
+    - name: Log in to Azure Container Registry (ACR)
       run: |
-        pip install -r requirements.txt
-        pytest
+        az acr login --name $ACR_NAME
 
-    # Deploy to Azure Web App
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: <your-app-service-name> # Replace with the new app name if changed
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+    - name: Build and tag Docker image
+      run: |
+        docker build -t $ACR_NAME.azurecr.io/bangalore-house-price-prediction:latest .
 
+    - name: Push Docker image to ACR
+      run: |
+        docker push $ACR_NAME.azurecr.io/bangalore-house-price-prediction:latest
+
+    - name: Create or update Azure Web App with the ACR image
+      run: |
+        az webapp create --name $AZURE_WEBAPP_NAME \
+                         --resource-group $AZURE_RESOURCE_GROUP \
+                         --plan $AZURE_PLAN \
+                         --deployment-container-image-name $ACR_NAME.azurecr.io/bangalore-house-price-prediction:latest || \
+        az webapp config container set --name $AZURE_WEBAPP_NAME \
+                                       --resource-group $AZURE_RESOURCE_GROUP \
+                                       --docker-custom-image-name $ACR_NAME.azurecr.io/bangalore-house-price-prediction:latest \
+                                       --docker-registry-server-url https://$ACR_NAME.azurecr.io
+
+    - name: Restart Azure Web App
+      run: |
+        az webapp restart --name $AZURE_WEBAPP_NAME --resource-group $AZURE_RESOURCE_GROUP
